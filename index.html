@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090a0f">
+<title>Character Phone — JaoMaew</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#090a0f;--glass:rgba(22,24,32,.78);--line:rgba(255,255,255,.13);--muted:#a7a9b4;--text:#f7f7fb;--accent:#a9c8ff;--safe-top:env(safe-area-inset-top,18px);--safe-bottom:env(safe-area-inset-bottom,18px)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#11131a;color:var(--text);font-family:Inter,"IBM Plex Sans Thai",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit;border:0}
+body{display:flex;justify-content:center;align-items:center;padding:22px;background:radial-gradient(circle at 20% 15%,#34384c 0,#171923 36%,#08090d 78%)}
+.phone-wrap{width:min(410px,100%);height:min(860px,calc(100dvh - 30px));min-height:600px;position:relative}
+.phone{height:100%;width:100%;position:relative;overflow:hidden;border:7px solid #292b32;border-radius:54px;background:#10131b;box-shadow:0 30px 90px #000b,inset 0 0 0 1px #7778}
+.phone:before{content:"";position:absolute;z-index:50;top:9px;left:50%;transform:translateX(-50%);width:112px;height:31px;border-radius:30px;background:#030407;box-shadow:0 1px 1px #7775}
+.screen{position:absolute;inset:0;overflow:hidden;background:#10131b}
+.wallpaper{position:absolute;inset:0;background:linear-gradient(145deg,#38445c,#111522 65%,#08090d);background-size:cover;background-position:center;transform:scale(1.02)}
+.wallpaper:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#05060a30,#05060a15 35%,#05060a9c)}
+.status{position:absolute;z-index:20;top:12px;left:23px;right:23px;height:26px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;text-shadow:0 1px 5px #000}
+.status-right{display:flex;align-items:center;gap:5px}.status svg{width:15px;height:13px;fill:currentColor}
+.lock-screen,.home-screen{position:absolute;inset:0;z-index:2}
+.lock-screen{display:flex;flex-direction:column;align-items:center;padding:82px 24px 30px;text-align:center}
+.lock-date{font-size:15px;font-weight:600;letter-spacing:.1px;text-shadow:0 2px 12px #0008}
+.lock-time{font-size:clamp(76px,22vw,108px);font-weight:300;letter-spacing:-7px;line-height:1.06;text-shadow:0 3px 20px #0006}
+.lock-widgets{display:flex;gap:9px;margin-top:20px;width:100%;justify-content:center}
+.widget{background:#ffffff20;border:1px solid #ffffff25;backdrop-filter:blur(18px);border-radius:19px;padding:12px 14px;min-width:105px;text-align:left;font-size:11px}
+.widget b{display:block;font-size:15px;margin-top:4px}
+.lock-bottom{margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:end}
+.round-control{width:45px;height:45px;border-radius:50%;background:#22252e99;border:1px solid #ffffff35;display:grid;place-items:center;backdrop-filter:blur(16px);font-size:19px}
+.unlock-hint{font-size:11px;color:#ffffffd9;text-shadow:0 1px 6px #000;margin-bottom:13px}
+.home-screen{display:none;padding:72px 19px 28px}
+.home-screen.active{display:block}
+.lock-screen.hidden{display:none}
+.home-wallpaper-dim{position:absolute;inset:0;background:#06070a25;pointer-events:none}
+.home-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:19px 10px}
+.app-icon{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;background:none;padding:0}
+.icon-box{width:57px;height:57px;border-radius:16px;display:grid;place-items:center;font-size:29px;box-shadow:0 5px 12px #0003;position:relative;overflow:hidden}
+.icon-box svg{width:31px;height:31px;stroke:white;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.app-name{font-size:10px;text-shadow:0 1px 5px #000;font-weight:500;white-space:nowrap}
+.badge-dot{position:absolute;right:-3px;top:-4px;background:#ff453a;color:white;border:1px solid #fff;border-radius:20px;font-size:9px;min-width:17px;height:17px;display:grid;place-items:center}
+.home-widget{position:relative;z-index:2;margin:24px 2px 20px;border-radius:21px;background:#ffffff26;border:1px solid #ffffff26;backdrop-filter:blur(20px);padding:13px 15px;display:flex;justify-content:space-between;align-items:center}
+.home-widget small{font-size:10px;color:#eee}.home-widget strong{display:block;font-size:15px;margin-top:3px}
+.dock{position:absolute;z-index:3;bottom:14px;left:13px;right:13px;height:83px;border-radius:27px;background:#ffffff30;border:1px solid #ffffff28;backdrop-filter:blur(24px);display:flex;justify-content:space-evenly;align-items:center}
+.dock .icon-box{width:53px;height:53px}
+.page-dots{position:absolute;bottom:108px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:3}
+.page-dots i{width:5px;height:5px;border-radius:50%;background:#ffffff70}.page-dots i:first-child{background:#fff}
+.app-view{position:absolute;inset:0;z-index:10;background:#f4f4f8;color:#171820;display:none;flex-direction:column;padding-top:54px}
+.app-view.open{display:flex}
+.app-view.dark{background:#111218;color:#f7f7fb}
+.app-header{height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 17px;border-bottom:1px solid #00000012}
+.app-header h2{font-size:17px;margin:0;font-weight:700}
+.back-btn{background:#8b8d991c;color:inherit;border-radius:20px;padding:7px 12px;font-size:12px}
+.app-content{padding:16px;overflow:auto;flex:1;padding-bottom:36px}
+.muted{color:#858793}.dark .muted{color:#a4a6b2}
+.card{background:#fff;border-radius:17px;padding:15px;margin-bottom:12px;box-shadow:0 2px 10px #1111110a}
+.dark .card{background:#22242e;box-shadow:none}
+.row{display:flex;align-items:center;gap:11px}.space{justify-content:space-between}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#d4d8e4,#717d9b);object-fit:cover;flex-shrink:0}
+.chat-row{padding:12px 0;border-bottom:1px solid #8882;display:flex;gap:11px;align-items:center;cursor:pointer}
+.chat-row:last-child{border:0}.chat-meta{flex:1;min-width:0}.chat-meta b{font-size:13px}.chat-meta p{margin:4px 0 0;font-size:11px;color:#858793;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{font-size:10px;border-radius:20px;padding:4px 8px;background:#e9efff;color:#34528b}
+.dark .pill{background:#31394b;color:#c8d9ff}
+.primary{background:#246bfe;color:#fff;border-radius:12px;padding:11px 14px;font-weight:600;font-size:12px}
+.soft{background:#8b8d991c;color:inherit;border-radius:11px;padding:9px 12px;font-size:12px}
+.field{width:100%;border:1px solid #d9dae1;background:#fff;color:#191a21;border-radius:11px;padding:11px 12px;margin:5px 0 11px;outline:none}
+.dark .field{background:#171922;border-color:#3b3d48;color:white}
+label{font-size:11px;color:#777986;display:block}
+textarea.field{min-height:90px;resize:vertical}
+.section-title{font-size:12px;font-weight:700;margin:5px 0 12px}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.photo-tile{aspect-ratio:1;background:linear-gradient(135deg,#d7d9e1,#9da7ba);border-radius:8px;overflow:hidden;display:grid;place-items:center;color:#535c6c;font-size:24px}
+.photo-tile img{width:100%;height:100%;object-fit:cover}
+.social-post{background:#fff;border-radius:15px;margin-bottom:14px;overflow:hidden}.dark .social-post{background:#22242e}
+.post-top{padding:12px;display:flex;align-items:center;gap:9px;font-size:12px}.post-img{height:230px;background:linear-gradient(135deg,#343d50,#a0a9ba);display:grid;place-items:center;color:#ffffffa0;font-size:12px}.post-img img{width:100%;height:100%;object-fit:cover}.post-caption{padding:12px;font-size:12px;line-height:1.6}
+.big-number{font-size:31px;font-weight:700;letter-spacing:-1px;margin:7px 0}
+.transaction{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #8882;font-size:12px}
+.note-item{padding:13px;border-radius:13px;background:#fff;margin-bottom:9px;cursor:pointer}.dark .note-item{background:#22242e}
+.note-item b{font-size:13px}.note-item p{font-size:11px;color:#898b95;margin:5px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.keypad-screen{position:absolute;inset:0;z-index:30;display:none;align-items:center;flex-direction:column;padding:112px 35px 30px;background:#11131acc;backdrop-filter:blur(25px)}
+.keypad-screen.open{display:flex}.keypad-title{font-size:21px;font-weight:600;margin-bottom:8px}.keypad-sub{font-size:12px;color:#ddd;margin-bottom:27px}
+.pass-dots{display:flex;gap:17px;margin-bottom:31px}.pass-dots i{width:10px;height:10px;border:1px solid #fff;border-radius:50%}.pass-dots i.filled{background:white}
+.keypad{display:grid;grid-template-columns:repeat(3,68px);gap:13px 18px}
+.key{width:68px;height:58px;border-radius:50%;background:#ffffff20;border:1px solid #ffffff25;font-size:24px;font-weight:400}
+.key small{display:block;font-size:8px;letter-spacing:1px;margin-top:1px}
+.key.clear{background:transparent;border:0;font-size:12px}
+.keypad-error{height:18px;color:#ff9a9a;font-size:11px;margin-top:14px}
+.sheet{position:absolute;inset:0;z-index:35;background:#0009;display:none;align-items:flex-end}.sheet.open{display:flex}
+.sheet-panel{width:100%;background:#f3f3f8;color:#171820;border-radius:25px 25px 0 0;padding:22px 18px 34px;max-height:85%;overflow:auto}
+.sheet-panel h3{margin:0 0 14px}
+.home-indicator{position:absolute;z-index:60;bottom:7px;left:50%;transform:translateX(-50%);width:112px;height:4px;border-radius:5px;background:#fff;mix-blend-mode:difference;cursor:pointer}
+.toast{position:absolute;z-index:70;left:50%;bottom:55px;transform:translateX(-50%);background:#252832;color:white;padding:10px 15px;border-radius:20px;font-size:11px;opacity:0;transition:.2s;pointer-events:none;white-space:nowrap}.toast.show{opacity:1}
+.setup{position:absolute;z-index:80;inset:0;background:#11131b;color:#fff;padding:75px 22px 25px;overflow:auto}
+.setup h1{font-size:25px;margin:0 0 7px}.setup p{font-size:12px;color:#aeb2c0;line-height:1.6}
+.setup .field{background:#20232e;border-color:#414554;color:white}
+.setup.hidden{display:none}
+@media(max-width:500px){body{padding:0;background:#090a0f}.phone-wrap{height:100dvh;width:100%;min-height:0}.phone{border:0;border-radius:0;box-shadow:none}.phone:before{top:10px}.app-view{padding-top:52px}}
+@media(min-width:700px){.phone-wrap{height:min(850px,calc(100dvh - 40px));width:400px}}
+</style>
+</head>
+<body>
+<div class="phone-wrap">
+<div class="phone" id="phone">
+<div class="screen">
+<div class="wallpaper" id="wallpaper"></div>
+<div class="status"><span id="statusTime">9:41</span><span class="status-right"><span>●●●</span><span>◖</span><svg viewBox="0 0 20 12"><rect x="1" y="1" width="16" height="10" rx="2" stroke="currentColor" fill="none"/><rect x="3" y="3" width="11" height="6" rx="1"/><path d="M18 4v4"/></svg></span></div>
+
+<section class="lock-screen" id="lockScreen">
+<div class="lock-date" id="lockDate">วันจันทร์ที่ 3 พฤศจิกายน</div>
+<div class="lock-time" id="lockTime">9:41</div>
+<div class="lock-widgets">
+<div class="widget">◷ &nbsp; ปฏิทิน<b>ไม่มีนัดหมาย</b></div>
+<div class="widget">☀ &nbsp; สภาพอากาศ<b>กรุงเทพฯ · 29°</b></div>
+</div>
+<div class="lock-bottom">
+<button class="round-control" onclick="toast('เปิดกล้องจำลอง')">📷</button>
+<div class="unlock-hint">แตะหน้าจอหรือปัดขึ้นเพื่อปลดล็อก</div>
+<button class="round-control" onclick="openControl()">🔦</button>
+</div>
+</section>
+
+<section class="home-screen" id="homeScreen">
+<div class="home-wallpaper-dim"></div>
+<div class="home-widget"><div><small id="homeDate">MONDAY, NOVEMBER 3</small><strong id="greeting">สวัสดีตอนเช้า</strong></div><div style="font-size:25px">☀️</div></div>
+<div class="home-grid" id="appGrid"></div>
+<div class="page-dots"><i></i><i></i></div>
+<div class="dock" id="dock"></div>
+</section>
+
+<div class="app-view" id="appView">
+<div class="app-header"><button class="back-btn" onclick="closeApp()">‹ หน้าจอโฮม</button><h2 id="appTitle">แอป</h2><button class="back-btn" onclick="openControl()">•••</button></div>
+<div class="app-content" id="appContent"></div>
+</div>
+
+<div class="keypad-screen" id="keypad">
+<div class="keypad-title">ป้อนรหัส</div><div class="keypad-sub">ป้อนรหัสเพื่อปลดล็อก iPhone</div>
+<div class="pass-dots" id="passDots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="keypad">
+<button class="key" onclick="pressKey('1')">1<small>&nbsp;</small></button><button class="key" onclick="pressKey('2')">2<small>ABC</small></button><button class="key" onclick="pressKey('3')">3<small>DEF</small></button>
+<button class="key" onclick="pressKey('4')">4<small>GHI</small></button><button class="key" onclick="pressKey('5')">5<small>JKL</small></button><button class="key" onclick="pressKey('6')">6<small>MNO</small></button>
+<button class="key" onclick="pressKey('7')">7<small>PQRS</small></button><button class="key" onclick="pressKey('8')">8<small>TUV</small></button><button class="key" onclick="pressKey('9')">9<small>WXYZ</small></button>
+<button class="key clear" onclick="cancelPass()">ยกเลิก</button><button class="key" onclick="pressKey('0')">0</button><button class="key clear" onclick="deleteKey()">ลบ</button>
+</div><div class="keypad-error" id="passError"></div>
+</div>
+
+<div class="sheet" id="controlSheet" onclick="if(event.target===this)closeControl()"><div class="sheet-panel">
+<div class="row space"><h3>ศูนย์ควบคุม</h3><button class="soft" onclick="closeControl()">เสร็จสิ้น</button></div>
+<div class="row" style="gap:8px;margin:15px 0"><button class="primary" onclick="toast('เปิดโหมดเครื่องบิน')">✈︎ เครื่องบิน</button><button class="soft" onclick="toast('เปิด Wi-Fi')">◉ Wi-Fi</button><button class="soft" onclick="toast('เปิด Bluetooth')">ᛒ Bluetooth</button></div>
+<div class="card"><b>ความสว่าง</b><input type="range" min="30" max="100" value="90" style="width:100%" oninput="document.querySelector('.screen').style.filter='brightness('+this.value/90+')'"></div>
+<div class="card"><b>กำลังเล่น</b><p class="muted" style="font-size:12px">ไม่มีเพลงที่กำลังเล่น</p></div>
+<button class="soft" onclick="openApp('settings');closeControl()">⚙ การตั้งค่า</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+<div class="home-indicator" onclick="goHome()"></div>
+
+<div class="setup" id="setup">
+<h1>ตั้งค่า Character Phone</h1>
+<p>ปรับข้อมูลพื้นฐานก่อนเริ่มใช้งาน คุณสามารถกลับมาแก้ไขได้ที่แอป Settings</p>
+<label>ชื่อตัวละคร</label><input class="field" id="setupName" placeholder="เช่น เดช / Dech">
+<label>รหัสปลดล็อก 4–6 หลัก</label><input class="field" id="setupPin" inputmode="numeric" maxlength="6" placeholder="ตั้งรหัสผ่าน" value="123456">
+<label>URL รูปหน้าจอล็อก (Wallpaper)</label><input class="field" id="setupWall" placeholder="https://...">
+<label>URL รูปโปรไฟล์ตัวละคร</label><input class="field" id="setupAvatar" placeholder="https://...">
+<button class="primary" style="width:100%;padding:14px" onclick="finishSetup()">เริ่มใช้งาน iPhone →</button>
+<p style="margin-top:18px">รหัสเริ่มต้นคือ 123456 หากยังไม่ได้กำหนดเอง สามารถเปลี่ยนได้ภายหลังใน Settings</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+const defaults={
+ name:"CHARACTER",pin:"123456",wallpaper:"",avatar:"",
+ chats:[
+  {name:"แม่",msg:"ถึงบ้านแล้วบอกด้วยนะ",time:"09:32",unread:"1",avatar:""},
+  {name:"Best friend",msg:"คืนนี้ไปกินข้าวกันไหม",time:"เมื่อวาน",unread:"",avatar:""},
+  {name:"กลุ่มเพื่อน",msg:"ส่งรูปมาแล้ว 3 รูป",time:"เมื่อวาน",unread:"3",avatar:""}
+ ],
+ posts:[
+  {user:"character",caption:"วันที่ดีอีกวันหนึ่ง ☁️",time:"2 ชั่วโมงที่แล้ว",image:"",likes:128},
+  {user:"close_friend",caption:"เก็บช่วงเวลานี้ไว้หน่อย",time:"เมื่อวาน",image:"",likes:64}
+ ],
+ notes:[{title:"สิ่งที่ต้องทำ",body:"• ซื้อกาแฟ\n• ตอบข้อความ\n• นัดหมายวันศุกร์"}],
+ transactions:[{name:"Coffee",detail:"วันนี้ · 08:42",amount:"-฿125"},{name:"เงินเดือน",detail:"เมื่อวาน · 09:00",amount:"+฿35,000"},{name:"ร้านอาหาร",detail:"เมื่อวาน · 19:21",amount:"-฿480"}],
+ photos:[],orders:[{name:"กาแฟเย็น",status:"กำลังเตรียม",price:"฿85"}]
+};
+let data=loadData(),passInput="",activeChat=null;
+function loadData(){try{return {...defaults,...JSON.parse(localStorage.getItem('jaomaewPhone')||'{}')}}catch(e){return {...defaults}}}
+function save(){localStorage.setItem('jaomaewPhone',JSON.stringify(data))}
+function init(){
+ document.getElementById('setupName').value=data.name==='CHARACTER'?'':data.name;
+ document.getElementById('setupPin').value=data.pin;
+ document.getElementById('setupWall').value=data.wallpaper;
+ document.getElementById('setupAvatar').value=data.avatar;
+ applyIdentity();renderHome();updateClock();
+ if(localStorage.getItem('jaomaewPhoneSetup')==='yes')document.getElementById('setup').classList.add('hidden');
+}
+function applyIdentity(){
+ const bg=data.wallpaper?`url("${data.wallpaper}") center/cover no-repeat`:'linear-gradient(145deg,#46536c,#182033 58%,#090b12)';
+ document.getElementById('wallpaper').style.background=bg;
+ document.getElementById('greeting').textContent='สวัสดี, '+(data.name||'');
+ document.title=(data.name||'Character')+' — Character Phone';
+}
+function finishSetup(){
+ const pin=document.getElementById('setupPin').value.trim();
+ if(!/^\d{4,6}$/.test(pin)){toast('รหัสต้องมี 4–6 หลัก');return}
+ data.name=document.getElementById('setupName').value.trim()||'CHARACTER';
+ data.pin=pin;data.wallpaper=document.getElementById('setupWall').value.trim();data.avatar=document.getElementById('setupAvatar').value.trim();
+ save();localStorage.setItem('jaomaewPhoneSetup','yes');document.getElementById('setup').classList.add('hidden');applyIdentity();renderHome();toast('ตั้งค่ามือถือเรียบร้อย');
+}
+function updateClock(){
+ const d=new Date(),time=d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',hour12:false});
+ document.getElementById('statusTime').textContent=time;document.getElementById('lockTime').textContent=time;
+ document.getElementById('lockDate').textContent=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
+ document.getElementById('homeDate').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}).toUpperCase();
+}
+setInterval(updateClock,15000);
+const apps=[
+ ['messages','ข้อความ','💬','#35c96b'],['photos','รูปภาพ','🌈','#f6f4ed'],['camera','กล้อง','📷','#d7dbe2'],['instagram','Instagram','📸','linear-gradient(135deg,#7952c8,#ed3c83,#ff9b42)'],
+ ['tiktok','TikTok','♪','#080808'],['line','LINE','🟢','#06c755'],['x','X','𝕏','#111'],['facebook','Facebook','f','#1877f2'],
+ ['bank','ธนาคาร','🏦','#176b9b'],['shopping','Shopping','🛍️','#ef8b75'],['notes','โน้ต','📝','#f3cf52'],['calendar','ปฏิทิน','📅','#f4f4f4'],
+ ['music','เพลง','🎵','#d74c6b'],['mail','Mail','✉️','#3886e8'],['phone','โทรศัพท์','📞','#36bd65'],['settings','Settings','⚙️','#858994']
+];
+function iconMarkup(app){let [id,name,emoji,color]=app;return `<button class="app-icon" onclick="openApp('${id}')"><span class="icon-box" style="background:${color};color:${id==='calendar'||id==='photos'?'#333':'white'}">${emoji}</span><span class="app-name">${name}</span></button>`}
+function renderHome(){
+ document.getElementById('appGrid').innerHTML=apps.slice(0,12).map(iconMarkup).join('');
+ document.getElementById('dock').innerHTML=apps.slice(12,16).map(iconMarkup).join('');
+}
+function unlockStart(){document.getElementById('keypad').classList.add('open');passInput='';updateDots();document.getElementById('passError').textContent=''}
+function pressKey(n){if(passInput.length>=6)return;passInput+=n;updateDots();if(passInput.length>=4&&passInput===data.pin){unlockSuccess()}else if(passInput.length===6){document.getElementById('passError').textContent='รหัสไม่ถูกต้อง';setTimeout(()=>{passInput='';updateDots()},650)}}
+function updateDots(){document.querySelectorAll('#passDots i').forEach((el,i)=>el.classList.toggle('filled',i<passInput.length))}
+function deleteKey(){passInput=passInput.slice(0,-1);updateDots();document.getElementById('passError').textContent=''}
+function cancelPass(){document.getElementById('keypad').classList.remove('open')}
+function unlockSuccess(){document.getElementById('keypad').classList.remove('open');document.getElementById('lockScreen').classList.add('hidden');document.getElementById('homeScreen').classList.add('active');passInput='';updateDots()}
+document.getElementById('lockScreen').addEventListener('click',unlockStart);
+let touchY=0;document.getElementById('phone').addEventListener('touchstart',e=>touchY=e.touches[0].clientY,{passive:true});
+document.getElementById('phone').addEventListener('touchend',e=>{let dy=e.changedTouches[0].clientY-touchY;if(dy<-45&& !document.getElementById('lockScreen').classList.contains('hidden'))unlockStart()},{passive:true});
+function goHome(){if(document.getElementById('appView').classList.contains('open')){closeApp();return}if(document.getElementById('keypad').classList.contains('open')){cancelPass();return}if(document.getElementById('homeScreen').classList.contains('active')){document.getElementById('homeScreen').classList.remove('active');document.getElementById('lockScreen').classList.remove('hidden')}else unlockStart()}
+function closeApp(){document.getElementById('appView').classList.remove('open')}
+function openControl(){document.getElementById('controlSheet').classList.add('open')}
+function closeControl(){document.getElementById('controlSheet').classList.remove('open')}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+function openApp(id){
+ const view=document.getElementById('appView'),content=document.getElementById('appContent');
+ view.classList.add('open');view.classList.toggle('dark',['messages','instagram','tiktok','x','notes','music','settings'].includes(id));
+ const titles={messages:'ข้อความ',photos:'รูปภาพ',camera:'กล้อง',instagram:'Instagram',tiktok:'TikTok',line:'LINE',x:'X',facebook:'Facebook',bank:'ธนาคาร',shopping:'Shopping',notes:'โน้ต',calendar:'ปฏิทิน',music:'เพลง',mail:'Mail',phone:'โทรศัพท์',settings:'การตั้งค่า'};
+ document.getElementById('appTitle').textContent=titles[id]||id;
+ content.innerHTML=renderApp(id);
+}
+function avatar(src,name){return src?`<img class="avatar" src="${esc(src)}" onerror="this.style.display='none'">`:`<div class="avatar" style="display:grid;place-items:center;font-size:18px">${(name||'?').slice(0,1)}</div>`}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderApp(id){
+ if(id==='messages'||id==='line')return renderMessages();
+ if(id==='instagram'||id==='facebook'||id==='tiktok'||id==='x')return renderSocial(id);
+ if(id==='bank')return renderBank();
+ if(id==='shopping')return renderShopping();
+ if(id==='notes')return renderNotes();
+ if(id==='photos')return renderPhotos();
+ if(id==='camera')return `<div class="card" style="text-align:center;padding:50px 15px"><div style="font-size:65px">📷</div><h3>กล้อง</h3><p class="muted">กล้องจำลองสำหรับบันทึกภาพในคลังตัวละคร</p><button class="primary" onclick="toast('เพิ่มรูปผ่าน Settings หรือ Gallery ได้')">เพิ่มรูปภาพ</button></div>`;
+ if(id==='calendar')return `<div class="card"><div class="muted">ปฏิทิน · ${new Date().toLocaleDateString('th-TH',{month:'long',year:'numeric'})}</div><div class="big-number">${new Date().getDate()}</div><b>${new Date().toLocaleDateString('th-TH',{weekday:'long'})}</b><p class="muted">วันนี้ยังไม่มีนัดหมาย</p><button class="primary" onclick="toast('เพิ่มกิจกรรมได้ในเวอร์ชันถัดไป')">＋ เพิ่มกิจกรรม</button></div><div class="section-title">กิจกรรมที่กำลังจะมาถึง</div><div class="card">ไม่มีรายการนัดหมาย</div>`;
+ if(id==='music')return `<div class="card" style="text-align:center;padding:30px"><div style="font-size:70px">🎧</div><h3>กำลังเล่น</h3><p class="muted">ยังไม่ได้เลือกเพลง</p><button class="primary" onclick="toast('เพิ่มเพลย์ลิสต์ได้ในข้อมูลตัวละคร')">เลือกเพลง</button></div><div class="section-title">เพลย์ลิสต์</div><div class="card">♡ เพลงโปรดของ ${esc(data.name)}</div>`;
+ if(id==='mail')return `<div class="card"><b>กล่องเมลเข้า</b><p class="muted">ยังไม่มีอีเมลใหม่</p></div><button class="primary" onclick="toast('เปิดหน้าสร้างอีเมลจำลอง')">เขียนอีเมล</button>`;
+ if(id==='phone')return `<div class="card"><div class="section-title">รายการโปรด</div>${data.chats.map(c=>`<div class="chat-row">${avatar(c.avatar,c.name)}<div class="chat-meta"><b>${esc(c.name)}</b><p>แตะเพื่อดูข้อมูลผู้ติดต่อ</p></div><span>☎</span></div>`).join('')}</div><div class="card"><b>ปุ่มกดหมายเลข</b><input class="field" id="dialNumber" placeholder="หมายเลขโทรศัพท์"><button class="primary" onclick="toast('การโทรเป็นระบบจำลอง')">โทรออก</button></div>`;
+ if(id==='settings')return renderSettings();
+ return `<div class="card">แอปจำลอง</div>`;
+}
+function renderMessages(){
+ return `<div class="row space" style="margin-bottom:12px"><div><div class="muted" style="font-size:11px">iCloud</div><b style="font-size:22px">ข้อความ</b></div><button class="primary" onclick="addChat()">＋ ใหม่</button></div><input class="field" placeholder="ค้นหา" oninput="filterChats(this.value)"><div id="chatList">${data.chats.map((c,i)=>chatRow(c,i)).join('')}</div>`;
+}
+function chatRow(c,i){return `<div class="chat-row" onclick="openChat(${i})">${avatar(c.avatar,c.name)}<div class="chat-meta"><b>${esc(c.name)}</b><p>${esc(c.msg)}</p></div><div style="text-align:right"><small class="muted">${esc(c.time)}</small>${c.unread?`<div class="pill">${esc(c.unread)}</div>`:''}</div></div>`}
+function filterChats(q){document.getElementById('chatList').innerHTML=data.chats.map((c,i)=>({c,i})).filter(x=>x.c.name.toLowerCase().includes(q.toLowerCase())).map(x=>chatRow(x.c,x.i)).join('')}
+function addChat(){const name=prompt('ชื่อผู้ติดต่อ');if(!name)return;data.chats.unshift({name,msg:'เริ่มบทสนทนาใหม่',time:'ตอนนี้',unread:'',avatar:''});save();openApp('messages')}
+function openChat(i){
+ activeChat=i;const c=data.chats[i];document.getElementById('appTitle').textContent=c.name;
+ document.getElementById('appContent').innerHTML=`<button class="soft" onclick="openApp('messages')">‹ รายการข้อความ</button><div style="text-align:center;padding:18px">${avatar(c.avatar,c.name)}<b style="display:block;margin-top:8px">${esc(c.name)}</b><small class="muted">iMessage</small></div><div id="chatBubbles"><div style="background:#858995;color:white;padding:10px 13px;border-radius:15px 15px 15px 4px;max-width:78%;font-size:12px;margin:10px 0">${esc(c.msg)}</div></div><div class="row" style="position:sticky;bottom:0;background:inherit;padding-top:12px"><input class="field" id="chatInput" placeholder="iMessage" style="margin:0"><button class="primary" onclick="sendMessage()">↑</button></div>`;
+}
+function sendMessage(){const inp=document.getElementById('chatInput');if(!inp.value.trim())return;const b=document.createElement('div');b.textContent=inp.value;b.style.cssText='background:#287cff;color:white;padding:10px 13px;border-radius:15px 15px 4px 15px;max-width:78%;font-size:12px;margin:10px 0 10px auto';document.getElementById('chatBubbles').appendChild(b);data.chats[activeChat].msg=inp.value;data.chats[activeChat].time='ตอนนี้';save();inp.value=''}
+function renderSocial(id){
+ const label={instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',x:'X'}[id];
+ return `<div class="row space" style="margin-bottom:14px"><b style="font-size:22px">${label}</b><button class="primary" onclick="addPost()">＋ โพสต์</button></div><div class="row" style="gap:14px;margin-bottom:18px">${avatar(data.avatar,data.name)}<div><b>${esc(data.name)}</b><div class="muted" style="font-size:10px">โปรไฟล์ของคุณ · ${label}</div></div><button class="soft" onclick="toast('นี่คือบัญชีจำลอง')">โปรไฟล์</button></div>${data.posts.map((p,i)=>`<div class="social-post"><div class="post-top">${avatar(data.avatar,p.user)}<b>${esc(p.user==='character'?data.name:p.user)}</b><span class="muted" style="margin-left:auto">${esc(p.time)}</span></div><div class="post-img">${p.image?`<img src="${esc(p.image)}">`:'รูปภาพ / วิดีโอ'}</div><div class="post-caption"><b>♡ ${p.likes||0} ถูกใจ</b><br>${esc(p.caption)}<div class="muted" style="margin-top:7px">ดูความคิดเห็นทั้งหมด</div></div></div>`).join('')}`;
+}
+function addPost(){const caption=prompt('เขียนแคปชันโพสต์');if(caption===null)return;const image=prompt('ใส่ URL รูปภาพ (เว้นว่างได้)')||'';data.posts.unshift({user:'character',caption,time:'ตอนนี้',image,likes:0});save();openApp('instagram')}
+function renderBank(){return `<div class="card" style="background:linear-gradient(135deg,#152a4c,#326b9c);color:white"><small>ยอดเงินคงเหลือ · บัญชีจำลอง</small><div class="big-number">฿ 128,450.00</div><div class="row space"><small>••••  ••••  ••••  2481</small><small>VISA</small></div></div><div class="row" style="gap:8px;margin-bottom:15px"><button class="primary" onclick="bankAction('โอนเงิน')">↗ โอนเงิน</button><button class="soft" onclick="bankAction('เติมเงิน')">＋ เติมเงิน</button><button class="soft" onclick="bankAction('จ่ายบิล')">▤ จ่ายบิล</button></div><div class="section-title">รายการล่าสุด</div><div class="card">${data.transactions.map(t=>`<div class="transaction"><div><b>${esc(t.name)}</b><div class="muted" style="font-size:10px;margin-top:4px">${esc(t.detail)}</div></div><b style="color:${t.amount.startsWith('+')?'#20a36b':'inherit'}">${esc(t.amount)}</b></div>`).join('')}</div><small class="muted">ข้อมูลธุรกรรมทั้งหมดเป็นข้อมูลสมมติสำหรับตัวละคร</small>`}
+function bankAction(type){const who=prompt(type+' · ระบุรายละเอียด');if(!who)return;const amount=prompt('จำนวนเงิน (บาท)');if(!amount)return;data.transactions.unshift({name:type+' · '+who,detail:'วันนี้ · ตอนนี้',amount:'-฿'+Number(amount).toLocaleString('th-TH')});save();openApp('bank');toast('บันทึกรายการจำลองแล้ว')}
+function renderShopping(){return `<div class="card" style="background:linear-gradient(135deg,#f5d7c9,#f9eee7);color:#523c36"><small>SHOPPING</small><h2 style="margin:8px 0">ของที่อยากได้ ✨</h2><p style="font-size:12px">รายการสั่งซื้อและการจัดส่งของ ${esc(data.name)}</p></div><button class="primary" onclick="addOrder()">＋ เพิ่มคำสั่งซื้อ</button><div class="section-title" style="margin-top:20px">คำสั่งซื้อของฉัน</div>${data.orders.map(o=>`<div class="card row space"><div><b>${esc(o.name)}</b><div class="muted" style="font-size:11px;margin-top:5px">${esc(o.status)}</div></div><b>${esc(o.price)}</b></div>`).join('')}`}
+function addOrder(){const name=prompt('ชื่อสินค้า / อาหาร');if(!name)return;const price=prompt('ราคา เช่น ฿250')||'ไม่ระบุ';data.orders.unshift({name,status:'รอจัดส่ง',price});save();openApp('shopping')}
+function renderNotes(){return `<div class="row space" style="margin-bottom:15px"><b style="font-size:22px">โน้ต</b><button class="primary" onclick="addNote()">＋ โน้ตใหม่</button></div>${data.notes.map((n,i)=>`<div class="note-item" onclick="editNote(${i})"><b>${esc(n.title)}</b><p>${esc(n.body)}</p></div>`).join('')}`}
+function addNote(){const title=prompt('หัวข้อโน้ต');if(!title)return;const body=prompt('เนื้อหา')||'';data.notes.unshift({title,body});save();openApp('notes')}
+function editNote(i){const n=data.notes[i],body=prompt(n.title,n.body);if(body===null)return;data.notes[i].body=body;save();openApp('notes')}
+function renderPhotos(){return `<div class="row space" style="margin-bottom:14px"><b style="font-size:22px">คลังรูปภาพ</b><button class="primary" onclick="addPhoto()">＋ เพิ่มรูป</button></div><div class="photo-grid">${(data.photos||[]).map((p,i)=>`<div class="photo-tile"><img src="${esc(p)}" onclick="viewPhoto(${i})"></div>`).join('')}${data.avatar?`<div class="photo-tile"><img src="${esc(data.avatar)}"></div>`:''}${data.wallpaper?`<div class="photo-tile"><img src="${esc(data.wallpaper)}"></div>`:''}</div><p class="muted" style="font-size:11px;margin-top:15px">เพิ่มรูปด้วย URL ภาพที่โฮสต์ออนไลน์ รูปจะถูกเก็บไว้ในรายการของมือถือจำลอง</p>`}
+function addPhoto(){const url=prompt('วาง URL รูปภาพ');if(!url)return;data.photos.push(url);save();openApp('photos')}
+function viewPhoto(i){const p=data.photos[i];document.getElementById('appContent').innerHTML=`<button class="soft" onclick="openApp('photos')">‹ รูปภาพทั้งหมด</button><img src="${esc(p)}" style="width:100%;border-radius:15px;margin-top:15px"><button class="soft" style="margin-top:12px" onclick="if(confirm('ลบรูปนี้หรือไม่')){data.photos.splice(${i},1);save();openApp('photos')}">ลบรูปภาพ</button>`}
+function renderSettings(){return `<div class="card"><div class="row">${avatar(data.avatar,data.name)}<div><b>${esc(data.name)}</b><div class="muted" style="font-size:11px">Apple ID · Character Archive</div></div></div></div><div class="section-title">ปรับแต่ง iPhone</div><div class="card"><label>ชื่อตัวละคร</label><input class="field" id="setName" value="${esc(data.name)}"><label>รหัสผ่านปลดล็อก (4–6 หลัก)</label><input class="field" id="setPin" inputmode="numeric" maxlength="6" value="${esc(data.pin)}"><label>Wallpaper URL</label><input class="field" id="setWall" value="${esc(data.wallpaper)}" placeholder="https://..."><label>รูปโปรไฟล์ URL</label><input class="field" id="setAvatar" value="${esc(data.avatar)}" placeholder="https://..."><button class="primary" onclick="saveSettings()">บันทึกการตั้งค่า</button></div><div class="section-title">ข้อมูลและความเป็นส่วนตัว</div><div class="card"><button class="soft" onclick="exportData()">ส่งออกข้อมูลมือถือ (JSON)</button> <button class="soft" onclick="resetData()">รีเซ็ตมือถือ</button></div><small class="muted">Character Phone · iOS-inspired fictional interface. ไม่ใช่ระบบ iOS หรือบริการ Apple จริง</small>`}
+function saveSettings(){const pin=document.getElementById('setPin').value.trim();if(!/^\d{4,6}$/.test(pin)){toast('รหัสต้องมี 4–6 หลัก');return}data.name=document.getElementById('setName').value.trim()||'CHARACTER';data.pin=pin;data.wallpaper=document.getElementById('setWall').value.trim();data.avatar=document.getElementById('setAvatar').value.trim();save();applyIdentity();renderHome();openApp('settings');toast('บันทึกแล้ว')}
+function exportData(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='character-phone-data.json';a.click();URL.revokeObjectURL(a.href)}
+function resetData(){if(!confirm('ลบข้อมูลมือถือจำลองทั้งหมดและเริ่มใหม่?'))return;localStorage.removeItem('jaomaewPhone');localStorage.removeItem('jaomaewPhoneSetup');location.reload()}
+document.addEventListener('keydown',e=>{if(document.getElementById('keypad').classList.contains('open')){if(/^\d$/.test(e.key))pressKey(e.key);if(e.key==='Backspace')deleteKey();if(e.key==='Escape')cancelPass()}if(e.key==='Escape')closeApp()});
+init();
+</script>
+</body>
+</html>
